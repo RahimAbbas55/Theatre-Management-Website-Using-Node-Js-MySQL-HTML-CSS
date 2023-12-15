@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.pinimg.com/564x/d8/6a/e5/d86ae5d9960b9d131ab64353f237fa79.jpg');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 140vh;
+        }
+
+        .profile-container {
+            background-color: maroon;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        .profile-container h2 {
+            color: beige;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: beige;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <h2>User Profile</h2>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" disabled>
+        </div>
+        <div class="form-group">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" >
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter new password" >
+        </div>
+        <div class="form-group">
+            <label for="userType">User Type:</label>
+            <select id="userType">
+                <option value="admin" disabled>Admin </option>
+                <option value="user" selected>User</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" >
+        </div>
+        <div class="form-group">
+            <label for="bio">Bio:</label>
+            <textarea id="bio" placeholder="Enter your bio"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="paymentInfo">Payment Info:</label>
+            <textarea id="paymentInfo"
+                placeholder="Enter your payment info">Credit Card Number: </textarea>
+        </div>
+        <div class="form-group">
+            <button onclick="editProf">Edit Profile</button>
+        </div>
+    </div>
+
+    <script>
+        async function editProfile() {
+        const fullName = document.getElementById('fullName').value;
+        const password = document.getElementById('password').value;
+        const userType = document.getElementById('userType').value;
+        const contact = document.getElementById('contact').value;
+        const bio = document.getElementById('bio').value;
+        const paymentInfo = document.getElementById('paymentInfo').value;
+
+        const response = await fetch('/updateUserProfile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fullName,
+                password,
+                userType,
+                contact,
+                bio,
+                paymentInfo,
+            }),
+        });
+
+        const data = await response.json();
+        alert(data.status);
+
+        if (response.ok) {
+            location.reload();
+        }
+    }
+
+    // Function to fetch user profile data and populate the form
+    async function populateProfile() {
+        const response = await fetch('/Profile');
+        const data = await response.json();
+
+        if (response.ok) {
+            const userProfile = data.userProfile;
+
+            // Populate form fields with user profile data
+            document.getElementById('username').value = userProfile.Username;
+            document.getElementById('fullName').value = userProfile.FullName;
+            document.getElementById('password').value = userProfile.Password;
+            document.getElementById('userType').value = userProfile.UserType;
+            document.getElementById('contact').value = userProfile.Contact;
+            document.getElementById('bio').value = userProfile.Bio;
+            document.getElementById('paymentInfo').value = userProfile.PaymentInfo;
+        } else {
+            alert('Failed to fetch user profile');
+        }
+    }
+
+    // Call the function to populate profile data when the page loads
+    window.onload = populateProfile;
+    </script>
+</body>
+
+</html>

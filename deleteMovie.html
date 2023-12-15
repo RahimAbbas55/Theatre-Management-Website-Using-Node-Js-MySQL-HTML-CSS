@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Movie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background-image: url('https://i.pinimg.com/564x/d8/6a/e5/d86ae5d9960b9d131ab64353f237fa79.jpg');
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .movie-form-container {
+            background-color: maroon;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .movie-form-container h2 {
+            color: beige;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: beige;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="movie-form-container">
+        <h2>Delete Movie</h2>
+        <form action="/deleteMovie" method="post" id="deleteMovieForm">
+            <div class="form-group">
+                <label for="movieTitle">Movie Title:</label>
+                <input type="text" id="movieTitle" name="title" placeholder="Enter the movie title you want to Delete">
+            </div>
+            <div class="form-group">
+                <button type="submit" onclick=deleteMov()>Submit</button>
+            </div>
+        </form>
+    </div>
+    
+
+    <script>
+        async function deleteMov() {
+            const title = document.getElementById('movieTitle').value;
+        
+            try {
+                const response = await fetch('/deleteMovie', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title }),
+                });
+        
+                const data = await response.json();
+        
+                if (!response.ok) {
+                    throw new Error(data.message);
+                }
+        
+                console.log('Server response:', data);
+        
+                document.getElementById('movieTitle').value = '';
+        
+                // Optionally handle success message or perform further actions
+                alert(data.status); // Display success message
+        
+                // Redirect to "/sdm" after successful deletion
+                if (data.status === 'Movie deleted successfully') {
+                    window.location.href = "/sdm";
+                }
+            } catch (error) {
+                console.error('Error:', error.message);
+                // Optionally handle error messages or UI updates for failed deletion
+                alert(error.message); // Display error message
+                return; // Exit the function if there's an error
+            }
+        }
+    </script>
+</body>
+</html>

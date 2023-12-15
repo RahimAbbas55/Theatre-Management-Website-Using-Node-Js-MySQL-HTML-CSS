@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+    <style>
+        body {
+            background-image: url('cinema.jpg');
+        }
+
+        h1 {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            text-decoration: underline;
+            color: darkcyan;
+        }
+
+        h2 {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            text-decoration: underline;
+            color: darkcyan;
+        }
+
+        p {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+
+        }
+
+        .search {
+            border: 5px solid aqua;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: maroon;
+        }
+
+        #heading1 {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #inbox {
+            width: 200px;
+            height: 25px;
+        }
+
+        #searchInput {
+            width: 200px;
+            height: 25px;
+            background-color: aliceblue;
+        }
+
+        .searchbtn {
+            width: 200px;
+            height: 50px;
+            font-size: medium;
+            border-radius: 20px;
+            background-color: #4caf50;
+        }
+
+        .searchbtn:hover {
+            box-shadow: 2px 2px 5px;
+            border-color: yellow;
+        }
+
+        .result {
+            border: 5px solid aqua;
+            height: 500px;
+            padding: 10px;
+            margin: 10px;
+            background-color: maroon;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Movie Search</h1>
+
+    <div class="search">
+        <form id="searchForm" action="/search" method="POST">
+            <h2 id="heading1">Enter the name of the movie you want to search:
+                <input type="text" id="searchInput" name="movieName">
+            </h2>
+            <button type="submit" class="searchbtn">Search</button>
+        </form>
+    </div>
+
+    <div class="result" id="searchResults">
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('searchInput').value.trim();
+
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ movieName: searchTerm }),
+            })
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('searchResults').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('searchResults').innerHTML = '<p>Error searching for the movie.</p>';
+                });
+        });
+    </script>
+</body>
+
+</html>

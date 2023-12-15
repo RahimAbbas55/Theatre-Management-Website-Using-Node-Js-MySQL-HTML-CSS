@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cinema Ticket Reservation</title>
+    <style>
+      body {
+        background-image: url("background2.jpeg");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+        font-family: "Courier New", Courier, monospace;
+        color: maroon;
+        text-decoration: underline;
+      }
+
+      .seat {
+        width: 40px;
+        height: 40px;
+        margin: 5px;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      p {
+        font-size: large;
+        color: maroon;
+      }
+
+      .seat.selected {
+        background-color: #4caf50;
+        border: 1px solid black;
+      }
+
+      #seats {
+        text-align: center;
+      }
+
+      a.button {
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        background-color: #4caf50;
+        color: white;
+        border: 1px solid #4caf50;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+
+      a.button:hover {
+        background-color: #45a049;
+      }
+      .form-group {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      #user-type {
+        width: 150px;
+        height: 55px;
+      }
+      a.button.disabled {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Online Cinema Ticket Reservation</h1>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div id="seats" method="POST">
+      <h2>Select your seat:</h2>
+      <div id="seatMap">
+        <!-- This is where your seats will be dynamically generated -->
+      </div>
+      <p>
+        <strong>Selected Seat:</strong>
+        <span id="selectedSeat"></span>
+      </p>
+      <a class="button disabled" id="nextButton" onclick="storeAndProceed()">Next</a>
+    </div>
+
+    <script>
+      const numberOfSeats = 100;
+      const seatMap = document.getElementById("seatMap");
+      const selectedSeatElement = document.getElementById("selectedSeat");
+      let selectedSeats = [];
+
+      // Existing seat creation loop
+      for (let i = 1; i <= numberOfSeats; i++) {
+        const seat = document.createElement("div");
+        seat.textContent = i;
+        seat.classList.add("seat");
+        seat.addEventListener("click", () => {
+          if (selectedSeats.length < 5 || seat.classList.contains("selected")) {
+            if (seat.classList.contains("selected")) {
+              const index = selectedSeats.indexOf(seat.textContent);
+              selectedSeats.splice(index, 1);
+            } else {
+              selectedSeats.push(seat.textContent);
+            }
+            seat.classList.toggle("selected");
+            selectedSeatElement.textContent = selectedSeats.join(", ");
+          } else {
+            alert("You can only select a maximum of 5 seats.");
+          }
+          updateNextButtonState();
+        });
+        seatMap.appendChild(seat);
+      }
+
+      // Function to update Next button state
+      const nextButton = document.getElementById("nextButton");
+      function updateNextButtonState() {
+        if (selectedSeats.length > 0) {
+          nextButton.classList.remove("disabled");
+          nextButton.setAttribute("href", "/seat2");
+        } else {
+          nextButton.classList.add("disabled");
+          nextButton.removeAttribute("href");
+        }
+      }
+      
+      function updateNextButtonState() {
+        if (selectedSeats.length > 0) {
+          nextButton.classList.remove("disabled");
+          nextButton.setAttribute("href", "/seat2");
+        } else {
+          nextButton.classList.add("disabled");
+          nextButton.removeAttribute("href");
+        }
+      }
+      
+      function storeAndProceed() {
+        if (selectedSeats.length > 0) {
+          fetch("/seat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ selectedSeats: selectedSeats }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                console.log("Seat selection sent to server");
+                // No need to set window.location.href here, it will only navigate when selected seats are available
+              } else {
+                throw new Error("Failed to send seat selection to server");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          alert("Please select at least one seat.");
+        }
+      }
+      
+    </script>
+  </body>
+</html>

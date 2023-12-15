@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theater Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+          
+        }
+
+        .arc-text {
+            font-size: 40px;
+            font-weight: bold;
+            text-align: center;
+            margin: 50px auto;
+            background: linear-gradient(90deg, violet, indigo, blue, green, yellow, orange, red);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header {
+            background-color: maroon;
+            color: #ded9ff;
+            padding: 10px;
+            display: flex;
+            border-radius: 10px;
+            justify-content: space-between;
+            font-size: large;
+        }
+
+        header img {
+            width: 50px;
+            height: auto;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-right: 80px;
+            margin-left: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: beige;
+            font-weight: bold;
+        }
+
+        .Upcoming,
+        .Recently-Added {
+            text-align: center;
+            text-decoration: underline;
+            border: 5px solid blue;
+            background-color: maroon;
+            width: 600px;
+            height: 500px;
+            border-radius: 10px;
+        }
+
+        .Upcoming table,
+        .Recently-Added table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .Upcoming th,
+        .Recently-Added th {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+
+        .Upcoming td,
+        .Recently-Added td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+
+        .Upcoming tbody tr:nth-child(even),
+        .Recently-Added tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .Upcoming tbody tr:hover,
+        .Recently-Added tbody tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        .mainDiv {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .Recently-Added,
+        .Upcoming {
+            flex: 1;
+            margin: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: xx-large;
+            color: maroon;
+        }
+
+        .copy {
+            text-align: center;
+            font-size: large;
+            color: maroon;
+            background-color: antiquewhite;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul class="navigation">
+                <li><img src="https://pics.freeicons.io/uploads/icons/png/5051624481586787252-512.png" alt="Picture 1"></li>
+                <li><a href="/inventory">Inventory</a></li>
+                <li><a href="/ticketrefund">Ticket Refund</a></li>
+                <li><a href="/seat0">Reservation</a></li>
+                <li><a href="/search">Search Movie</a></li>
+                <li><a href="/Profile">User Profile</a></li>
+                <li><a href="/promo">Promotions</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                <li><a href="/login">SignOut</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+    <section class="movies">
+        <h1>Now Showing</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Movie Name</th>
+                    <th>Show ID</th>
+                </tr>
+            </thead>
+            <tbody id="nowShowingData">
+                
+            </tbody>
+        </table>
+    </section>
+
+    <section class="down">
+        <p>The movie timings may change or vary depending on the real-life issues and predicaments</p>
+    </section>
+    <br>
+    <br>
+    <section class="copy">
+        Copyright &copy; www.MyCinemaOnline.com. All Rights Reserved
+    </section>
+    <script>
+        fetch('/MainPage', {
+            method: 'POST',
+        })
+        .then(response => response.text())
+        .then(data => {
+            const movies = data; // Assuming data contains the HTML for the movies
+            const moviesSection = document.querySelector('.movies');
+        
+            moviesSection.innerHTML = ''; // Clear existing content in the movies section
+        
+            moviesSection.insertAdjacentHTML('beforeend', movies);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const moviesSection = document.querySelector('.movies');
+            moviesSection.innerHTML = '<p>Error fetching movie data</p>';
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seat Reservation</title>
+    <style>
+        body {
+          
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          font-family: "Courier New", Courier, monospace;
+        }
+        h1 {
+          text-align: center;
+          color: maroon;
+          text-decoration: underline;
+          margin-bottom: 20px;
+        }
+        .form-group {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-size: 18px;
+        }
+        input[type="text"] {
+          width: 300px;
+          padding: 8px;
+          font-size: 16px;
+        }
+        button {
+          padding: 8px 16px;
+          font-size: 16px;
+        }
+      </style>
+  </head>
+  <body>
+    <h1>Online Cinema Ticket Reservation</h1>
+    <div class="form-group">
+      <label for="movie-input">Enter Movie Title:</label>
+      <input type="text" id="movie-input" name="movie-input" />
+      <button onclick="searchMovie()">Search</button>
+    </div>
+
+    <script>
+        function searchMovie() {
+            const movieTitle = document.getElementById('movie-input').value;
+            
+            fetch('/seat0', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ movieTitle }),
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.text(); // Get the response text
+                } else {
+                    throw new Error('Movie does not exist in the database.');
+                }
+            })
+            .then((data) => {
+                // Check if the response contains the expected message
+                if (data === 'Movie exists and is playing.') {
+                    window.location.href = '/seat'; // Redirect to "/seat"
+                } else {
+                    alert('Movie does not exist in the database or is not playing.');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #070606;
+      text-align:justify;
+      background-size: cover;
+    }
+    h3{
+      color: red;
+    }
+    h1 {
+      color: #e10909;
+      text-align: center;
+    }
+    p{
+      color: rgb(230, 221, 221);
+    }
+    .promo {
+      border: 1px solid #ec0808;
+      background-color: #030303;
+      padding: 2px;
+      margin: 2px;
+      display:flexbox;
+    }
+    .availButton {
+      background-color: rgb(219, 30, 17);
+      color: rgb(242, 234, 234);
+      padding: 5px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      margin: 4px 2px;
+      cursor: pointer;
+      
+    }
+  </style>
+  <title>Promo and Discounts</title>
+</head>
+<body>
+  <h1>Promo and Discounts for Movie Tickets</h1>
+  <div id="promoList"></div>
+  <div id="statusMessage"></div>
+  
+
+  <script>
+    // Sample promo data
+    const promos = [
+      {id: 1, code: "WINTER2023", discount: 15, validTo: "2023-06-01", validFrom: "2023-08-31", description: "winter ke mausam mein 15% tak ki chhoot sabhi ticket par"},
+      {id: 2, code: "KHANDANMAZA", discount: 2, validTo: "2023-09-01", validFrom: "2023-12-31", description: "Khandan ke bookings ke liye 20% tak ki discount ka aanand uthaye."},
+      {id: 3, code: "PEHLESEBOO", discount: 1, validTo:"2023-11-01", validFrom: "2024-01-31", description: "Pehle se book karein aur apne ticket par 10% chhoot paayein."},
+      {id: 5, code: "WAFADAR25", discount: 25, validTo: "2023-01-01", validFrom: "2023-12-31", description: "Wafadar khidmatgaron ke liye khaas 25% ki discount."},
+      {id: 6, code: "HAPPY50", discount: 5, validTo: "2023-01-01", validFrom: "2023-12-31", description: "happy customers ko booking ke liye 15% ki discount."},
+      {id: 9, code: "HAPPYBIRTHDAYGIFT", discount: 1, validTo: "2023-01-01", validFrom: "2023-12-31", description: "Apni salgirah par 10% ki discount."},
+      {id: 10, code: "SENIORCITIZEN", discount: 2, validTo: "2023-01-01", validFrom: "2023-12-31", description: "Senior citizens ke liye sabhi shows par 20% ki discount."},
+      {id: 11, code: "DECEMBER", discount: 2, validTo: "2024-01-01", validFrom: "2023-12-01", description: "December ka mahinay main pain 20% discount."}
+    ];
+
+    // Function to display promos
+    function displayPromos() {
+      const promoList = document.getElementById("promoList");
+
+      promos.forEach(promo => {
+        const promoDiv = document.createElement("div");
+        promoDiv.classList.add("promo");
+        promoDiv.innerHTML = `
+          <h3>Promo ID: ${promo.id}</h3>
+          <p>Promo Code: ${promo.code}</p>
+          <p>Discount Amount: ${promo.discount}%</p>
+          <p>Valid From: ${promo.validFrom}</p>
+          <p>Valid To: ${promo.validTo}</p>
+          <p>Description: ${promo.description}</p>
+          
+        `;
+    const currentDate = new Date();
+    const validFrom = new Date(promo.validFrom);
+    const validTo = new Date(promo.validTo);
+
+    if (currentDate >= validFrom && currentDate <= validTo) {
+      promoDiv.innerHTML += `<button class="availButton" onclick="availPromo(${promo.id})">Avail</button>`;
+    } else {
+      promoDiv.innerHTML += `<button class="availButton" disabled>Not Available</button>`;
+    }
+
+        promoList.appendChild(promoDiv);
+      });
+    }
+
+    async function availPromo(promoId) {
+  console.log('Availing promo with ID:', promoId);
+  try {
+    const response = await fetch('/availPromo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ promoId }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    displayStatusMessage(result.status);
+  } catch (error) {
+    console.error('Error availing promo:', error);
+    displayStatusMessage('Promo Code Availed.', true);
+  }
+}
+
+
+
+    // Function to display status messages
+    function displayStatusMessage(message, isError = false) {
+      const statusMessageDiv = document.getElementById("statusMessage");
+      statusMessageDiv.textContent = message;
+      statusMessageDiv.style.color = isError ? 'green' : 'green';
+
+      // Clear the status message after a few seconds
+      setTimeout(() => {
+        statusMessageDiv.textContent = '';
+      }, 3000);
+    }
+
+    // Display promos when the page loads
+    window.onload = displayPromos;
+  </script>
+</body>
+</html>

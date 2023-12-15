@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Information Form</title>
+    <style>
+        body {
+            background-image: url('cinema.jpg');
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        h1 {
+            font-size: xx-large;
+            color: beige;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 250px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #userInfoForm {
+            background-color: maroon;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .submit {
+            width: 200px;
+            height: 35px;
+            padding: 10px;
+            margin: 10px;
+            background-color: blueviolet;
+            border-radius: 20px;
+        }
+
+        .submit:hover {
+            box-shadow: 3px 2px 3px;
+            border-color: #007bff;
+        }
+
+        .booked {
+            background-color: #ff5733; /* Change the color to your desired color */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <form id="userInfoForm" action="/seat2" method="post">
+            <h1>User Information Form</h1>
+            <label for="first_name"><b>First Name:</b></label>
+            <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+            
+            <label for="last_name"><b>Last Name:</b></label>
+            <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+            
+            <label for="contactEmail"><b>Contact Email:</b></label>
+            <input type="text" id="contactEmail" name="contactEmail" placeholder="Enter your personal email" required>
+            
+            <label for="phoneNumber"><b>Phone Number:</b></label>
+            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter your personal contact number" required>
+            
+            <br>
+            <button class="submit" onclick="submitDetailsToDB()">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("movie_name").value = "Your Global Movie Name Here";
+        });
+        function submitDetailsToDB() {
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            console.log('First Name:', firstName);
+            console.log('Last Name:', lastName);
+            console.log('Contact Email:', contactEmail);
+            console.log('Phone Number:', phoneNumber);
+
+            // Simulate a successful booking
+            const selectedSeats = document.querySelectorAll('.selected');
+            selectedSeats.forEach(seat => {
+                seat.classList.add('booked');
+                seat.classList.remove('selected');
+            });
+        }
+    </script>
+</body>
+
+</html>

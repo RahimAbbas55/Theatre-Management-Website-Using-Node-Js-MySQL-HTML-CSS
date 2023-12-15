@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .theatre-background {
+            background-image: url('theatre-background.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        .refund-form-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px; /* Added max-width for responsiveness */
+            margin: 0 auto; /* Center the container */
+        }
+
+        .refund-form-container h2 {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .refund-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .refund-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>Apply for Refund</title>
+</head>
+
+<body>
+    <div class="theatre-background"></div>
+    <div class="refund-form-container">
+        <h2>Apply for Refund</h2>
+        <form id="applyRefundForm">
+            <label for="applyReservationId">Reservation ID:</label>
+            <input type="text" id="applyReservationId" name="applyReservationId" required><br>
+            <label for="applyUserId">User ID:</label>
+            <input type="text" id="applyUserId" name="applyUserId" required><br>
+            <button type="button" class="refund-button" id="applyRefund">Submit</button>
+        </form>
+        <div id="applyRefundResult"></div>
+    </div>
+    <script>
+        document.getElementById("applyRefund").addEventListener("click", function () {
+            var applyReservationId = document.getElementById("applyReservationId").value;
+            var applyUserId = document.getElementById("applyUserId").value;
+            var applyRefundResultDiv = document.getElementById("applyRefundResult");
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/applyForRefund", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        const refundId = response.refundId;
+
+                        applyRefundResultDiv.innerHTML = `<span style='color: #4CAF50;'>Reservation ID: ${applyReservationId} submitted for refund. Refund ID: ${refundId}</span>`;
+                        alert("Applied for refund successfully! Refund ID: ${refundId}");
+                    } else {
+                        applyRefundResultDiv.innerHTML = "<span style='color: #ff0000;'>Error submitting for refund. Please try again.</span>";
+                        alert("Error: Record not added!");
+                    }
+                }
+            };
+
+            var applyData = JSON.stringify({ applyReservationId: applyReservationId, applyUserId: applyUserId });
+            xhr.send(applyData);
+        });
+    </script>
+</body>
+
+</html>

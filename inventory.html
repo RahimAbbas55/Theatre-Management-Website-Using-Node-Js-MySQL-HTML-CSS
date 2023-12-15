@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .inventory-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+    .item-name {
+      margin-right: 20px;
+    }
+    .counter {
+      display: flex;
+      align-items: center;
+    }
+    .counter button {
+      padding: 5px 10px;
+      margin: 0 5px;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .counter button:hover {
+      background-color: #ff3333;
+    }
+    .count {
+      font-size: 24px;
+      margin: 0 10px;
+    }
+    .confirm-button {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .confirm-button button {
+      padding: 10px 20px;
+      background-color: #ff0000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .confirm-button button:hover {
+      background-color: #ff3333;
+    }
+  </style>
+  <title>Snack Inventory</title>
+</head>
+<body>
+  <h1>Inventory</h1>
+  <div class="inventory-container">
+    <div class="item">
+      <div class="item-name">Chips</div>
+      <div class="counter">
+        <button onclick="decreaseCount('chips')">-</button>
+        <div id="chipsCount" class="count">0</div>
+        <button onclick="increaseCount('chips')">+</button>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-name">Chocolate</div>
+      <div class="counter">
+        <button onclick="decreaseCount('chocolate')">-</button>
+        <div id="chocolateCount" class="count">0</div>
+        <button onclick="increaseCount('chocolate')">+</button>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-name">Popcorn</div>
+      <div class="counter">
+        <button onclick="decreaseCount('popcorn')">-</button>
+        <div id="popcornCount" class="count">0</div>
+        <button onclick="increaseCount('popcorn')">+</button>
+      </div>
+    </div>
+  </div>
+  <div class="confirm-button">
+    <button onclick="book()">Book</button>
+  </div>
+
+  <script>
+    var inventoryQuantities = {
+      chips: 20,
+      chocolate: 20,
+      popcorn: 20
+    };
+
+    var snackQuantities = {
+      chips: 0,
+      chocolate: 0,
+      popcorn: 0
+    };
+  
+    function increaseCount(item) {
+      var countElement = document.getElementById(item + 'Count');
+      if (snackQuantities[item] < inventoryQuantities[item]) { 
+        snackQuantities[item] += 1;
+        countElement.innerHTML = snackQuantities[item];
+      } else {
+        alert('Maximum available quantity reached for ' + item);
+      }
+    }
+  
+    function decreaseCount(item) {
+      var countElement = document.getElementById(item + 'Count');
+      if (snackQuantities[item] > 0) {
+        snackQuantities[item] -= 1;
+        countElement.innerHTML = snackQuantities[item];
+      }
+    }
+  
+    function book() {
+      var message = "Snack Quantities booked:\n";
+      for (var item in snackQuantities) {
+        inventoryQuantities[item] -= snackQuantities[item];
+        message += item + ": " + snackQuantities[item] + "\n";
+        snackQuantities[item] = 0; 
+        document.getElementById(item + 'Count').innerHTML = 0;
+      }
+      alert(message);
+    }
+  </script>
+</body>
+</html>

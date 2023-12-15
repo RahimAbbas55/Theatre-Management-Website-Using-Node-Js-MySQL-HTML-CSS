@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            background-image:url('https://i.pinimg.com/564x/d8/6a/e5/d86ae5d9960b9d131ab64353f237fa79.jpg');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background-color: maroon;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            height: 300px;
+            width: 300px;
+            border: solid 3px black;
+            margin-top: 100px;
+
+        }
+
+        .login-container h1 {
+            color: white;
+        }
+
+        .form-group {
+            display: block;
+            flex-direction: column;
+            margin-bottom: 20px;
+            text-align: left;
+            color: beige;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 7px;
+        }
+
+        .form-group a    {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 15px 30px;
+            margin-left: 95px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+
+        }
+
+        .form-group button:hover {
+            background-color: #2e9e33;
+        }
+
+        .login-container .reg {
+            color: #fff;
+            text-align: end;
+            margin-top: -13%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter your username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password">
+        </div>
+        <div class="form-group">
+            <button onclick="login()">Login</button>
+        </div>
+        <div class="reg">
+            <a href="/register">New User?</a>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.status);
+                // Redirect only on successful login
+                window.location.href = '/mainpage';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle unsuccessful login here (e.g., show error message)
+                alert('Login failed');
+            });
+        }
+    </script>
+</body>
+
+</html>
